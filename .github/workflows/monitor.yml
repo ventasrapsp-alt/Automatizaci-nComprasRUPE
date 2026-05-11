@@ -1,0 +1,47 @@
+name: Monitor Licitaciones ANCAP UTE
+
+on:
+  schedule:
+    - cron: '0 11 * * 1'
+  workflow_dispatch:
+
+jobs:
+  monitorear-licitaciones:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: |
+          pip install requests beautifulsoup4 lxml openpyxl
+
+      - name: Restaurar historial CSV
+        uses: actions/cache@v4
+        with:
+          path: |
+            historial_licitaciones.csv
+            cache_notificadas.json
+          key: licitaciones-cache-${{ runner.os }}
+          restore-keys: |
+            licitaciones-cache-
+
+      - name: Ejecutar monitor
+        env:
+          EMAIL_DESTINO: ${{ secrets.EMAIL_DESTINO }}
+          EMAIL_REMITENTE: ${{ secrets.EMAIL_REMITENTE }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python monitor_licitaciones.py
+
+      - name: Guardar historial CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: historial-licitaciones-${{ github.run_number }}
+          path: historial_licitaciones.csv
+          retention-days: 90
