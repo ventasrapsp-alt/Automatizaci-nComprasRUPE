@@ -35,11 +35,11 @@ from datetime import datetime, timedelta
 # ─────────────────────────────────────────────
 CONFIG = {
     # Email destino (donde llega el reporte)
-    "email_destino": "tu@email.com",
+    "email_destino": "ventas@rap-sp.com.ar",
 
     # Cuenta Gmail remitente (necesita App Password de Google)
-    "email_remitente": "tubot@gmail.com",
-    "gmail_app_password": "xxxx xxxx xxxx xxxx",  # Generá en: myaccount.google.com/apppasswords
+    "email_remitente": "ventas.rap.sp@gmail.com",
+    "gmail_app_password": "ywqd zlbc gfmb sevl",  # Generá en: myaccount.google.com/apppasswords
 
     # Archivo CSV donde se acumula el historial
     "csv_historial": "historial_licitaciones.csv",
