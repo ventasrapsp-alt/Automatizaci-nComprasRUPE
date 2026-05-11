@@ -1,7 +1,8 @@
 """
 ╔══════════════════════════════════════════════════════╗
-║   MONITOR DE LICITACIONES — ANCAP & UTE URUGUAY     ║
-║   Fuente: ARCE (comprasestatales.gub.uy)            ║
+║   MONITOR DE LICITACIONES — ARCE Uruguay            ║
+║   ANCAP · UTE · ANTEL · TODO EL PORTAL             ║
+║   Fuente: comprasestatales.gub.uy                   ║
 ║   Ejecución: Automática cada lunes vía cron/Task    ║
 ╚══════════════════════════════════════════════════════╝
 
@@ -52,35 +53,129 @@ CONFIG = {
 
 # ─────────────────────────────────────────────
 #  🎯  KEYWORDS A DETECTAR
+#
+#  Perfil de negocio:
+#  → Suministro de equipos eléctricos AT/MT/BT
+#  → Tendido de líneas y redes eléctricas
+#  → EPP específico para trabajos con tensión
+#  → NO interesa: limpieza, excavaciones, obra civil general
 # ─────────────────────────────────────────────
 KEYWORDS = [
-    # EPP
-    "EPP", "equipos de protección", "protección personal",
-    "casco", "arnés", "guantes", "calzado de seguridad",
-    "ropa de trabajo", "indumentaria de seguridad",
-    "gafas de protección", "protección auditiva",
-    # Trabajo en altura
-    "trabajo en altura", "trabajos en altura",
-    "rescate en altura", "líneas de vida",
-    "andamios", "plataformas elevadoras",
-    # Capacitación / Cursos
-    "capacitación", "capacitacion", "curso",
-    "formación", "formacion", "entrenamiento",
-    "seguridad laboral", "seguridad e higiene",
-    "prevención de riesgos", "prevencion de riesgos",
+    # Tensión — AT / MT / BT (todas las combinaciones)
+    " AT ", "alta tensión", "alta tension",
+    " MT ", "media tensión", "media tension",
+    " BT ", "baja tensión", "baja tension",
+    "MT/BT", "BT/BT", "MT/MT", "AT/MT", "AT/BT",
+    "kV", "150kV", "500kV", "220kV", "66kV", "15kV",
+
+    # Suministro de equipos eléctricos
+    "suministro", "transformador", "transformadores",
+    "autotrafo", "autotransformador",
+    "celda", "celdas primarias", "seccionadora", "seccionadoras",
+    "disyuntor", "disyuntores", "interruptor",
+    "conductor", "conductores", "cable", "cables protegido",
+    "bornera", "borneras", "pinza amperimétrica", "pinzas amperimétricas",
+    "descargador", "pararrayos",
+    "medidor", "transformador de medida",
+    "banco de condensadores",
+
+    # Tendido de líneas y redes
+    "tendido", "líneas de transmisión", "lineas de transmision",
+    "líneas de distribución", "lineas de distribucion",
+    "red de distribución", "red de distribucion",
+    "mástil", "mastil", "mástiles",
+    "subestación", "subestaciones",
+    "estación 150", "estación 500",
+
+    # EPP altura y riesgo eléctrico
+    "casco", "cascos", "casco dieléctrico", "casco dielectrico",
+    "arnés", "arnes", "arneses",
+    "soga dieléctrica", "soga dielectrica", "sogas dieléctricas",
+    "cuerda dieléctrica", "cuerda dielectrica",
+    "mosquetón", "mosqueton", "mosquetones",
+    "línea de vida", "linea de vida", "líneas de vida",
+    "absorbedor de impacto", "absorbedor de energía",
+    "freno de soga", "freno de cuerda",
+    "anclaje", "anclajes", "punto de anclaje",
+    "eslinga", "eslingas",
+    "posicionador", "posicionadores",
+    "cinturón de seguridad", "cinturon de seguridad",
+    "equipo de protección contra caídas", "protección contra caída",
+    "proteccion contra caida",
+    "detector de tensión", "detector de tension",
+    "pértiga", "pertiga", "pértigas", "pertigas",
+    "vara de maniobra", "varas de maniobra",
+    "equipo de maniobra", "equipos de maniobra",
+    "equipo de puesta a tierra", "puesta a tierra",
+    "traje ignífugo", "ropa ignifuga", "ropa ignífuga",
+    "calzado dieléctrico", "calzado dielectrico",
+    "casco dieléctrico", "casco dielectrico",
+    "pantalla facial", "careta facial",
+    "alfombra dieléctrica", "alfombra dielectrica",
+    "banqueta aislante", "escalera dieléctrica",
+
+    # Conectores, herrajes y accesorios de línea
+    "conector", "conectores",
+    "herraje", "herrajes",
+    "grapa", "grapas",
+    "aislador", "aisladores",
+    "vaina termorretráctil", "vainas termorretractil",
+    "termorretráctil", "termorretractil",
+    "empalme", "empalmes",
+    "terminal", "terminales",
+    "manguito", "manguitos",
+    "preformado", "preformados",
+    "amortiguador", "amortiguadores",
+    "cruceta", "crucetas",
+    "fitting", "fittings",
+
+    # Trabajos con tensión
+    "trabajo con tensión", "trabajo con tension",
+    "trabajos con tensión", "trabajos con tension",
+    "línea viva", "linea viva", "líneas vivas",
+    "mantenimiento con tensión", "mantenimiento en tensión",
+
+    # Capacitación técnica eléctrica
+    "capacitación técnica", "capacitacion tecnica",
+    "curso trabajo con tensión", "curso trabajos con tension",
+    "formación en tensión", "formacion en tension",
 ]
 
-# ─────────────────────────────────────────────
-#  🌐  FUENTES — URLs DIRECTAS POR ORGANISMO
-# ─────────────────────────────────────────────
-# ARCE asigna inciso 60 = ANCAP, inciso 61 = UTE
-FUENTES = [
+# Keywords que descartan una licitación aunque tenga hits (exclusiones)
+KEYWORDS_EXCLUIR = [
+    "limpieza", "excavacion", "excavación",
+    "obra civil", "muro", "pintura",
+    "venta de inmueble", "venta de monte",
+    "formularios", "publicacion de avisos", "publicación de avisos",
+    "arrendamiento de local",
+]
+
+# ─────────────────────────────────────────────────────────────────
+#  🌐  FUENTES
+#
+#  Estrategia de doble cobertura:
+#
+#  A) Por organismo (ANCAP / UTE / ANTEL):
+#     → Se descargan TODAS sus licitaciones vigentes.
+#     → Útil para ver todo lo que publican, más allá de keywords.
+#
+#  B) Portal completo (TODO el Estado):
+#     → RSS de "cambios de la última semana" sin filtro de organismo.
+#     → Se filtra por keywords EPP / altura / capacitación.
+#     → Captura cualquier organismo que publique algo relevante.
+#     → Complementa A: si surge una oportunidad en OSE, ANP, ASSE, etc.,
+#       la detectás igual.
+# ─────────────────────────────────────────────────────────────────
+
+# Incisos: 60=ANCAP · 61=UTE · 65=ANTEL
+FUENTES_POR_ORGANISMO = [
     {
         "nombre": "ANCAP — Llamados Vigentes",
         "organismo": "ANCAP",
         "url_html": "https://www.comprasestatales.gub.uy/consultas/buscar/tipo-pub/VIG/inciso/60/tipo-doc/R/tipo-fecha/ROF/filtro-cat/CAT/orden/ORD_ROF/tipo-orden/DESC",
         "url_rss":  "https://www.comprasestatales.gub.uy/consultas/rss/tipo-pub/VIG/inciso/60/tipo-doc/R/tipo-fecha/ROF/filtro-cat/CAT/orden/ORD_ROF/tipo-orden/DESC",
         "url_base": "https://www.comprasestatales.gub.uy",
+        "filtrar_por_keywords": False,  # Mostrar TODAS sus licitaciones
     },
     {
         "nombre": "UTE — Llamados Vigentes",
@@ -88,8 +183,29 @@ FUENTES = [
         "url_html": "https://www.comprasestatales.gub.uy/consultas/buscar/tipo-pub/VIG/inciso/61/tipo-doc/R/tipo-fecha/ROF/filtro-cat/CAT/orden/ORD_ROF/tipo-orden/DESC",
         "url_rss":  "https://www.comprasestatales.gub.uy/consultas/rss/tipo-pub/VIG/inciso/61/tipo-doc/R/tipo-fecha/ROF/filtro-cat/CAT/orden/ORD_ROF/tipo-orden/DESC",
         "url_base": "https://www.comprasestatales.gub.uy",
+        "filtrar_por_keywords": False,  # Mostrar TODAS sus licitaciones
+    },
+    {
+        "nombre": "ANTEL — Concursos de Precios Vigentes",
+        "organismo": "ANTEL",
+        "url_html": "https://www.comprasestatales.gub.uy/consultas/buscar/tipo-pub/VIG/inciso/65/tipo-doc/C/tipo-fecha/ROF/filtro-cat/CAT/orden/ORD_ROF/tipo-orden/DESC",
+        "url_rss":  "https://www.comprasestatales.gub.uy/consultas/rss/tipo-pub/VIG/inciso/65/tipo-doc/C/tipo-fecha/ROF/filtro-cat/CAT/orden/ORD_ROF/tipo-orden/DESC",
+        "url_base": "https://www.comprasestatales.gub.uy",
+        "filtrar_por_keywords": False,  # Mostrar TODAS sus licitaciones
     },
 ]
+
+# RSS semanal sin filtro de organismo — todo el portal ARCE
+# La URL se construye dinámicamente con las fechas de la semana actual
+FUENTE_PORTAL_COMPLETO = {
+    "nombre": "ARCE — Portal Completo (todos los organismos)",
+    "organismo": "VARIOS",
+    "url_base": "https://www.comprasestatales.gub.uy",
+    "filtrar_por_keywords": True,  # SOLO mostrar los que tengan keywords
+}
+
+# Unión de todas las fuentes para iterar
+FUENTES = FUENTES_POR_ORGANISMO + [FUENTE_PORTAL_COMPLETO]
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; LicitacionesBot/1.0)"
@@ -113,8 +229,12 @@ def guardar_cache(cache: set):
 
 
 def detectar_keywords(texto: str) -> list:
-    """Retorna lista de keywords encontradas en el texto (case-insensitive)."""
+    """Retorna keywords encontradas. Retorna lista vacía si hay keywords de exclusión."""
     texto_lower = texto.lower()
+    # Si el texto contiene algo que explícitamente NO nos interesa → descartar
+    for excluir in KEYWORDS_EXCLUIR:
+        if excluir.lower() in texto_lower:
+            return []
     return [kw for kw in KEYWORDS if kw.lower() in texto_lower]
 
 
@@ -335,23 +455,113 @@ def enviar_email(licitaciones_con_hits: list, total: int):
 
 
 # ─────────────────────────────────────────────
+#  🌍  SCRAPING PORTAL COMPLETO (sin filtro de organismo)
+# ─────────────────────────────────────────────
+
+def scrape_portal_completo() -> list:
+    """
+    Descarga el RSS de 'cambios de la última semana' de TODO el portal ARCE
+    (sin filtro de organismo) y retorna solo los que contienen keywords.
+
+    La URL se construye dinámicamente con el rango de fechas de los últimos 7 días,
+    igual a como lo hace el portal en su link 'Cambios de la última semana'.
+    """
+    hoy = datetime.now()
+    hace_7_dias = hoy - timedelta(days=7)
+
+    desde = hace_7_dias.strftime("%Y-%m-%d+00%%3A00%%3A00")
+    hasta = hoy.strftime("%Y-%m-%d+23%%3A59%%3A59")
+
+    url_rss = (
+        f"https://www.comprasestatales.gub.uy/consultas/rss/"
+        f"tipo-pub/ALL/tipo-fecha/MOD/orden/ORD_MOD/tipo-orden/DESC/"
+        f"rango-fecha/{desde}_{hasta}"
+    )
+
+    fuente = FUENTE_PORTAL_COMPLETO
+    resultados = []
+
+    print(f"\n🌍 Procesando: {fuente['nombre']}")
+    print(f"   Período: {hace_7_dias.strftime('%d/%m/%Y')} → {hoy.strftime('%d/%m/%Y')}")
+
+    try:
+        r = requests.get(url_rss, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.content, "xml")
+        items = soup.find_all("item")
+
+        total_items = len(items)
+        hits = 0
+
+        for item in items:
+            titulo      = item.find("title").get_text(strip=True)      if item.find("title")       else ""
+            descripcion = item.find("description").get_text(strip=True) if item.find("description") else ""
+            link        = item.find("link").get_text(strip=True)        if item.find("link")        else ""
+            pub_date    = item.find("pubDate").get_text(strip=True)     if item.find("pubDate")     else ""
+
+            texto_completo = f"{titulo} {descripcion}"
+            keywords_encontradas = detectar_keywords(texto_completo)
+
+            # Para el portal completo: solo guardamos los que tienen keywords
+            if keywords_encontradas:
+                hits += 1
+                # Intentar extraer el organismo del título (ARCE suele incluirlo)
+                organismo_detectado = "VARIOS"
+                for org in ["ANCAP", "UTE", "ANTEL", "OSE", "ANP", "ASSE", "BPS", "BROU", "BSE", "INAU"]:
+                    if org in titulo.upper() or org in descripcion.upper():
+                        organismo_detectado = org
+                        break
+
+                resultados.append({
+                    "organismo": organismo_detectado,
+                    "titulo": titulo,
+                    "descripcion": descripcion[:300],
+                    "link": link,
+                    "fecha_publicacion": pub_date,
+                    "keywords": keywords_encontradas,
+                    "tiene_hits": True,
+                    "fuente": "RSS-PORTAL-COMPLETO",
+                })
+
+        print(f"  ✅ Portal completo: {total_items} licitaciones revisadas, {hits} con keywords relevantes")
+
+    except Exception as e:
+        print(f"  ❌ Error en portal completo: {e}")
+
+    return resultados
+
+
+# ─────────────────────────────────────────────
 #  🚀  EJECUCIÓN PRINCIPAL
 # ─────────────────────────────────────────────
 
 def main():
-    print("\n" + "="*55)
-    print(f"  MONITOR LICITACIONES — {datetime.now().strftime('%d/%m/%Y %H:%M')}")
-    print("="*55)
+    print("\n" + "="*60)
+    print(f"  MONITOR LICITACIONES ARCE — {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+    print("="*60)
+    print("  Cobertura: ANCAP · UTE · ANTEL · Portal completo")
+    print("="*60)
 
     cache = cargar_cache()
     todas_las_licitaciones = []
 
-    for fuente in FUENTES:
+    # ── BLOQUE A: organismos específicos (ANCAP, UTE, ANTEL) ──
+    print("\n── BLOQUE A: Organismos específicos ──────────────────")
+    for fuente in FUENTES_POR_ORGANISMO:
         print(f"\n🔍 Procesando: {fuente['nombre']}")
         resultados = scrape_rss(fuente)
         todas_las_licitaciones.extend(resultados)
 
-    # Filtrar nuevas (no notificadas antes)
+    # ── BLOQUE B: portal completo filtrado por keywords ──
+    print("\n── BLOQUE B: Portal completo (todos los organismos) ──")
+    resultados_portal = scrape_portal_completo()
+
+    # Evitar duplicar licitaciones que ya aparecieron en ANCAP/UTE/ANTEL
+    links_ya_vistos = {l["link"] for l in todas_las_licitaciones}
+    nuevos_del_portal = [r for r in resultados_portal if r["link"] not in links_ya_vistos]
+    todas_las_licitaciones.extend(nuevos_del_portal)
+
+    # ── Filtrar nuevas (no notificadas en ejecuciones anteriores) ──
     nuevas = []
     for lic in todas_las_licitaciones:
         id_unico = f"{lic['organismo']}_{lic['link']}"
@@ -359,24 +569,29 @@ def main():
             nuevas.append(lic)
             cache.add(id_unico)
 
-    # Guardar todo en CSV (historial completo)
+    # Guardar historial completo en CSV
     if todas_las_licitaciones:
         guardar_csv(todas_las_licitaciones)
 
-    # Filtrar solo las que tienen keywords relevantes (entre las nuevas)
+    # Para el email: licitaciones nuevas con keywords relevantes
+    # ANCAP/UTE/ANTEL: todas las nuevas (tienen_hits puede ser False)
+    # Portal completo: ya vienen pre-filtradas por keywords
     con_hits = [l for l in nuevas if l["tiene_hits"]]
 
-    print(f"\n📊 Resumen:")
-    print(f"   Total revisadas:      {len(todas_las_licitaciones)}")
-    print(f"   Nuevas (no vistas):   {len(nuevas)}")
-    print(f"   Con keywords EPP/Alt: {len(con_hits)}")
+    print(f"\n{'='*60}")
+    print(f"  📊 RESUMEN FINAL")
+    print(f"{'='*60}")
+    print(f"  Total revisadas esta semana:   {len(todas_las_licitaciones)}")
+    print(f"  Nuevas (no vistas antes):      {len(nuevas)}")
+    print(f"  Con keywords EPP/Altura/Cap:   {len(con_hits)}")
+    print(f"  Del portal completo (nuevas):  {len(nuevos_del_portal)}")
 
     # Decidir si enviar email
     debe_enviar = True
     if CONFIG["solo_alertar_con_hits"] and len(con_hits) == 0:
         debe_enviar = False
-        print("   → Sin hits relevantes, email no enviado (config: solo_alertar_con_hits=True)")
-        print("   → Cambiá a False en CONFIG para recibir reporte igual.")
+        print("\n  → Sin hits relevantes esta semana.")
+        print("  → Cambiá solo_alertar_con_hits=False en CONFIG para recibir reporte siempre.")
 
     if debe_enviar:
         print("\n📧 Enviando email...")
