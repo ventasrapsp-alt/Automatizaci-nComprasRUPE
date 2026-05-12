@@ -38,7 +38,7 @@ import os
 CONFIG = {
     "email_destino":      os.environ.get("EMAIL_DESTINO",      "ventas@rap-sp.com.ar"),
     "email_remitente":    os.environ.get("EMAIL_REMITENTE",    "ventas.rap.sp@gmail.com"),
-    "gmail_app_password": os.environ.get("GMAIL_APP_PASSWORD", "ywqdzlbcgfmbsevi"),
+    "gmail_app_password": os.environ.get("GMAIL_APP_PASSWORD", "qjec lhyi esqf lnyo"),
     "csv_historial": "historial_licitaciones.csv",
     "cache_file": "cache_notificadas.json",
     "solo_alertar_con_hits": True,
