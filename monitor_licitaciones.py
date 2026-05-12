@@ -30,24 +30,17 @@ from email.mime.base import MIMEBase
 from email import encoders
 from datetime import datetime, timedelta
 
+import os
+
 # ─────────────────────────────────────────────
 #  ⚙️  CONFIG — EDITÁ ESTO ANTES DE EJECUTAR
 # ─────────────────────────────────────────────
 CONFIG = {
-    # Email destino (donde llega el reporte)
-    "email_destino": "ventas@rap-sp.com.ar",
-
-    # Cuenta Gmail remitente (necesita App Password de Google)
-    "email_remitente": "ventas.rap.sp@gmail.com",
-    "gmail_app_password": "ywqd zlbc gfmb sevl",  # Generá en: myaccount.google.com/apppasswords
-
-    # Archivo CSV donde se acumula el historial
+    "email_destino":      os.environ.get("EMAIL_DESTINO",      "ventas@rap-sp.com.ar"),
+    "email_remitente":    os.environ.get("EMAIL_REMITENTE",    "ventas.rap.sp@gmail.com"),
+    "gmail_app_password": os.environ.get("GMAIL_APP_PASSWORD", "ywqd zlbc gfmb sevl"),
     "csv_historial": "historial_licitaciones.csv",
-
-    # Archivo JSON para no re-alertar licitaciones ya notificadas
     "cache_file": "cache_notificadas.json",
-
-    # Solo alertar si hay al menos una keyword encontrada
     "solo_alertar_con_hits": True,
 }
 
@@ -68,8 +61,15 @@ KEYWORDS = [
     "MT/BT", "BT/BT", "MT/MT", "AT/MT", "AT/BT",
     "kV", "150kV", "500kV", "220kV", "66kV", "15kV",
 
-    # Suministro de equipos eléctricos
-    "suministro", "transformador", "transformadores",
+    # Suministro — solo combinado con equipos del rubro
+    "suministro de transformadores", "suministro de cables",
+    "suministro de conductores", "suministro de celdas",
+    "suministro de disyuntores", "suministro de equipos eléctricos",
+    "suministro de materiales eléctricos", "suministro de aisladores",
+    "suministro de herrajes", "suministro de conectores",
+    "suministro de arneses", "suministro de EPP",
+    "suministro de equipos de protección",
+    "suministro e instalación",
     "autotrafo", "autotransformador",
     "celda", "celdas primarias", "seccionadora", "seccionadoras",
     "disyuntor", "disyuntores", "interruptor",
@@ -122,7 +122,9 @@ KEYWORDS = [
     "vaina termorretráctil", "vainas termorretractil",
     "termorretráctil", "termorretractil",
     "empalme", "empalmes",
-    "terminal", "terminales",
+    "terminal de media tensión", "terminal de alta tensión",
+    "terminal de cable", "terminales de cable",
+    "terminal termorretráctil", "terminales termorretráctiles",
     "manguito", "manguitos",
     "preformado", "preformados",
     "amortiguador", "amortiguadores",
@@ -132,7 +134,7 @@ KEYWORDS = [
     # Trabajos con tensión
     "trabajo con tensión", "trabajo con tension",
     "trabajos con tensión", "trabajos con tension",
-    "línea viva", "linea viva", "líneas vivas",
+    "línea viva", "linea de vida", "lineas de vida", "líneas vivas",
     "mantenimiento con tensión", "mantenimiento en tensión",
 
     # Capacitación técnica eléctrica
